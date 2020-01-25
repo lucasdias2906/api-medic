@@ -15,7 +15,7 @@ connection.connect(function(err){
 })
 
 exports.get = ((req, res) => {            
-    connection.query(`select medico.name,medico.crm,medico.phone,medico.state,medico.city, specialty.name as specialty from medic_specialty_join inner join medico on medico.id_medico = medic_specialty_join.id_medic inner join specialty on specialty.id_specialty= medic_specialty_join.id_specialty
+    connection.query(`select medico.id_medico, medico.name,medico.crm,medico.phone,medico.state,medico.city, specialty.name as specialty from medic_specialty_join inner join medico on medico.id_medico = medic_specialty_join.id_medic inner join specialty on specialty.id_specialty= medic_specialty_join.id_specialty
     ORDER BY medico.id_medico ASC`,  
     function (err, rows, fields) {
         if (!err) {
