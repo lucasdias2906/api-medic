@@ -2,6 +2,7 @@ const express = require("express")
 const app = express();
 const bodyParser = require("body-parser")
 const router = express.Router();
+const cors = require("cors")
 
 const medicRoutes = require("./routes/medic")
 const specialtyRoutes = require("./routes/specialty")
@@ -13,6 +14,7 @@ app.use(bodyParser.urlencoded({
     extended: false
 }))
 
+app.use(cors());
 app.use("/medic", medicRoutes)
 app.use("/specialty", specialtyRoutes)
 app.use("/", indexRoutes)

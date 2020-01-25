@@ -32,7 +32,7 @@ exports.post = ((req, res) => {
 
     const { name } = req.body
 
-    connection.query(`INSERT INTO specialty(name) VALUES (${name})`, function (err, result) {
+    connection.query(`INSERT INTO specialty(name) VALUES (${name},${id_medic})`, function (err, result) {
         if (!err) {
             console.log('especialidade cadastrada com sucesso!');
         } else {
