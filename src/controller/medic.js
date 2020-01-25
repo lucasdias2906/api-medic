@@ -2,31 +2,39 @@
 const mysql = require("mysql");
 
 const connection = mysql.createConnection({
-    host:'mysql.cristoematos.com.br',
+    host: 'mysql.cristoematos.com.br',
     user: 'cristoematos',
     password: 'Lucas2906',
     database: 'cristoematos'
 });
 
 
-connection.connect(function(err){
-    if(err)throw err
+connection.connect(function (err) {
+    if (err) throw err
     console.log("connection sucess")
 })
 
 exports.get = ((req, res) => {
-    connection.query("select * from medico", function (err, rows, fields) {
- console.log(err)
-        if (!err) {
-            res.status(200).send({ data: rows });
-        } else {
-            res.status(400).send({
-                message: "erro ao realizar a consulta",
-                data: rows
-            });
+    if (error) {
+        return res.status(500).send({
+            erro: eror
+        })
+    }
 
-        }
-    });
+    connection.query(`select medico.name,medico.crm,medico.phone,medico.state,medico.city,specialty.name from medic_specialty_join inner join medico on medico.id_medico = medic_specialty_join.id_medic inner join specialty on specialty.id_specialty= medic_specialty_join.id_specialty
+ORDER BY medico.id_medico ASC`,
+        function (err, rows, fields) {
+console.log(rows)
+            if (!err) {
+                res.status(200).send({ data: rows });
+            } else {
+                res.status(400).send({
+                    message: "erro ao realizar a consulta",
+                    data: rows
+                });
+
+            }
+        });
 })
 
 exports.post = ((req, res) => {
