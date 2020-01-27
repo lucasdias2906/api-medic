@@ -2,6 +2,7 @@
 const mysql = require("mysql");
 
 const connection = mysql.createConnection({
+    multipleStatements: true,
     host: 'mysql.cristoematos.com.br',
     user: 'cristoematos',
     password: 'Lucas2906',
@@ -32,9 +33,11 @@ exports.get = ((req, res) => {
 
 exports.post = ((req, res) => {
 
-    const { name, crm, phone, state, city } = req.body
+    const { name, crm, phone, state, city, especialidade } = req.body
 
-    connection.query(`INSERT INTO medico(name, crm,phone,state,city) VALUES ('${name}', ${crm},${phone},'${state}','${city}')`, function (err, rows, fields) {
+    connection.query(`INSERT INTO medico(name, crm,phone,state,city) VALUES ('${name}', ${crm},${phone},'${state}','${city}' ); INSERT INTO specialty( name) VALUES ("${especialidade}") `, function (err, rows, fields) {
+    connection.query(` INSERT INTO medic_specialty_join (id_medico, id_speacialty) VALUES ('${id_medico}','${id_specialty}')`)    
+
         if (!err) {
 
             res.status(200).send({
@@ -53,13 +56,21 @@ exports.post = ((req, res) => {
 
 exports.put = ((req, res) => {
 
-    const { name, crm, phone, state, city } = req.body
+    const { name, phone, state, city, id_specialty } = req.body
 
-    connection.query(`UPDATE medico set name = ${name}, phone = ${phone} , state = ${state} city = ${city} where id=${req.body.id}`, function (err, result) {
+    connection.query(`UPDATE medico set name = ${name}, phone = ${phone} , state = ${state} city = ${city}, id_specialty = ${id_specialty} where id_medico=${req.body.id_medico}`, function (err, rows, result) {
         if (!err) {
-            console.log('Usuario editado com sucesso!');
+
+            res.status(200).send({
+                message: 'Usuario atualizado com sucesso!'
+            });
+
         } else {
-            console.log('Erro: o usuario não foi editado com sucesso!');
+            res.status(400).send({
+                message: "Erro ao atualizar o usuario!",
+                erro: err
+            });
+
         }
     });
 })
@@ -68,11 +79,19 @@ exports.delete = ((req, res) => {
 
 
 
-    connection.query(`DELETE FROM medico WHERE id = ${req.body.id}`, function (err, result) {
+    connection.query(`DELETE FROM medico WHERE id_medico = ${req.body.id_medico}`, function (err, rows, result) {
         if (!err) {
-            console.log("Usuario apagado com sucesso!");
+
+            res.status(200).send({
+                message: 'Usuario deletado com sucesso!'
+            });
+
         } else {
-            console.log("Erro: o usuario não foi apagado com sucesso!");
+            res.status(400).send({
+                message: "Erro ao deletar o usuario!" + err,
+                erro: err
+            });
+
         }
     });
 })
