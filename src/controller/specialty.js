@@ -42,7 +42,10 @@ exports.post = ((req, res) => {
 })
 
 exports.put = ((req, res) => {
-    connection.query(`UPDATE specialty SET name = ${name} WHERE id = 1`, function (err, result) {
+
+    const { name } = req.body
+
+    connection.query(`UPDATE specialty SET name = ${name} where id = ${req.body.id}`, function (err, result) {
         if (!err) {
             console.log('especialidade editado com sucesso!');
         } else {
@@ -52,7 +55,7 @@ exports.put = ((req, res) => {
 })
 
 exports.delete = ((req, res) => {
-    connection.query("DELETE FROM specialty WHERE id = 2", function (err, result) {
+    connection.query(`DELETE FROM specialty WHERE id = ${req.body.id}`, function (err, result) {
         if (!err) {
             console.log("especialidade apagada com sucesso!");
         } else {
